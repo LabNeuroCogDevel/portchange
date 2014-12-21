@@ -3,7 +3,7 @@ export TERM=xterm-256color
 
 # wait for network to come online, need to be able to access ngrok.com
 count=1
-while ! ping -c1 ngrok.com && [ $count -lt 10000 ]; do sleep 2;let count++; done
+while ! /sbin/ping -c1 ngrok.com && [ $count -lt 10000 ]; do sleep 2;let count++; done
 
 
 # start if not started
