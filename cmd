@@ -1,1 +1,1 @@
-ssh lncd@ngrok.com -p 60195 #2014-12-18
+ssh lncd@ngrok.com -p 32999 #2014-12-21
