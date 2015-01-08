@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 export TERM=xterm-256color 
 
+set -x
+
+cd $(dirname $0)
+
 # wait for network to come online, need to be able to access ngrok.com
 count=1
 while ! /sbin/ping -c1 ngrok.com && [ $count -lt 10000 ]; do sleep 2;let count++; done
