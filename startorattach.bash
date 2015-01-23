@@ -18,9 +18,9 @@ tmux list-sessions |grep '^ngrok:' || (
       # give time for server to start
       sleep 5
 )
-cmd="ssh lncd@$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /') #$(date +%F)"
+cmd="ssh -AY lncd@$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /') #$(date +%F)"
 echo $cmd > cmd
-git diff cmd --exit-code || (git add cmd; git commit -am 'update on reboot'; git push)
+git diff --exit-code cmd || (git add cmd; git commit -am 'update on reboot'; git push)
 
 echo "tmux attach -t ngrok # to view/kill"
 echo "$cmd # to connect"
