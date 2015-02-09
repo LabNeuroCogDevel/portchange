@@ -29,8 +29,13 @@ tmux list-sessions |grep '^ngrok:' || (
       sleep 5
 )
 cmd="ssh -AY lncd@$hostandport #$(date +%F\ %H:%M)"
+echo "tmux attach -t ngrok # to view/kill"
+echo "$cmd # to connect"
+
+# if same port, will print
+sameportis=$( perl -lne '$c{$&}+=1 if /\d{5,}/; END{print grep {$c{$_}>1} keys %c} ' <(echo $cmd) cmd )
+[ -n "$sameportis" ] && continue
+
 echo $cmd > cmd
 git diff --exit-code cmd || (git add cmd; git commit -am 'update on reboot'; git push)
 
-echo "tmux attach -t ngrok # to view/kill"
-echo "$cmd # to connect"

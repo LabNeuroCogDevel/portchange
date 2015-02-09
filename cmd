@@ -1,1 +1,1 @@
-ssh -AY lncd@ngrok.com -p 32999 #2015-02-09 09:07
+ssh -AY lncd@ngrok.com -p 32999 #2015-02-09 09:29
