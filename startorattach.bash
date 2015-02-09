@@ -9,6 +9,16 @@ cd $(dirname $0)
 count=1
 while ! /sbin/ping -c1 ngrok.com && [ $count -lt 10000 ]; do sleep 2;let count++; done
 
+# try 10 times to get the port
+# exit loop when we get it
+# exit script if we never get the port
+for i in 1..10; do 
+   hostandport="$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /')"
+   [ -n "$hostandport" ] && break
+   sleep 2
+done
+[ -z "$hostandport" ] && echo "could not get ngrok port address!" && exit 1
+
 
 # start if not started
 tmux list-sessions |grep '^ngrok:' || ( 
@@ -18,7 +28,7 @@ tmux list-sessions |grep '^ngrok:' || (
       # give time for server to start
       sleep 5
 )
-cmd="ssh -AY lncd@$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /') #$(date +%F\ %H:%M)"
+cmd="ssh -AY lncd@$hostandport #$(date +%F\ %H:%M)"
 echo $cmd > cmd
 git diff --exit-code cmd || (git add cmd; git commit -am 'update on reboot'; git push)
 
