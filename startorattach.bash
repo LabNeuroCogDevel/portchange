@@ -1,13 +1,24 @@
 #!/usr/bin/env bash
 export TERM=xterm-256color 
 
-set -x
+#set -x
 
 cd $(dirname $0)
 
 # wait for network to come online, need to be able to access ngrok.com
 count=1
-while ! /sbin/ping -c1 ngrok.com && [ $count -lt 10000 ]; do sleep 2;let count++; done
+while ! /sbin/ping -c1 ngrok.com >/dev/null && [ $count -lt 10000 ]; do sleep 2;let count++; done
+
+
+
+# start if not started
+tmux list-sessions 2>/dev/null |grep '^ngrok:' || ( 
+      tmux new-session -s ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
+      #tmux new-session -s ngrok -d;
+      #tmux new-window -t ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
+      # give time for server to start
+      sleep 5
+)
 
 # try 10 times to get the port
 # exit loop when we get it
@@ -19,22 +30,13 @@ for i in 1..10; do
 done
 [ -z "$hostandport" ] && echo "could not get ngrok port address!" && exit 1
 
-
-# start if not started
-tmux list-sessions |grep '^ngrok:' || ( 
-      tmux new-session -s ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
-      #tmux new-session -s ngrok -d;
-      #tmux new-window -t ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
-      # give time for server to start
-      sleep 5
-)
 cmd="ssh -AY lncd@$hostandport #$(date +%F\ %H:%M)"
 echo "tmux attach -t ngrok # to view/kill"
 echo "$cmd # to connect"
-
-# if same port, will print
+# if same port, will print port
+# if we have same port, we dont need to do anything, so exit withotu error
 sameportis=$( perl -lne '$c{$&}+=1 if /\d{5,}/; END{print grep {$c{$_}>1} keys %c} ' <(echo $cmd) cmd )
-[ -n "$sameportis" ] && continue
+[ -n "$sameportis" ] && exit
 
 echo $cmd > cmd
 git diff --exit-code cmd || (git add cmd; git commit -am 'update on reboot'; git push)
