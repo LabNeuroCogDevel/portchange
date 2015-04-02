@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 export TERM=xterm-256color 
+# add tmux path
+PATH="$PATH:/opt/local/bin/"
 
 #set -x
 
