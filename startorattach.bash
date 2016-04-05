@@ -11,11 +11,12 @@ cd $(dirname $0)
 count=1
 while ! curl ngrok.com >/dev/null && [ $count -lt 10000 ]; do sleep 2;let count++; done
 
-
+ngrokcmd='~lncd/src/ngrok/ngrok2/ngrok tcp 22'
+#'~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
 
 # start if not started
 tmux list-sessions 2>/dev/null |grep '^ngrok:' || ( 
-      tmux new-session -s ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
+      tmux new-session -s ngrok -n ngrok -d "$ngrokcmd"
       #tmux new-session -s ngrok -d;
       #tmux new-window -t ngrok -n ngrok -d '~lncd/src/ngrok/ngrok --authtoken "nAs5WyXo66pUGKXUvCat" --proto=tcp 22 ';
       # give time for server to start
@@ -26,7 +27,8 @@ tmux list-sessions 2>/dev/null |grep '^ngrok:' || (
 # exit loop when we get it
 # exit script if we never get the port
 for i in 1..10; do 
-   hostandport="$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /')"
+   #hostandport="$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /')"
+   hostandport=$(curl 127.0.0.1:4040/api/tunnels | sed 's/.*tcp:\/\/\(.*.io:[0-9]\+\).*/\1/')
    [ -n "$hostandport" ] && break
    sleep 2
 done
