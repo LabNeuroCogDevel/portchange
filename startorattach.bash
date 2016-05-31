@@ -29,7 +29,7 @@ tmux list-sessions 2>/dev/null |grep '^ngrok:' || (
 for i in 1..10; do 
    #hostandport="$(curl 127.0.0.1:4040/http/in 2>/dev/null |perl -lne 'print $& if /ngrok.com:\d+/'|sed 's/:/ -p /')"
    hostandport=$(curl 127.0.0.1:4040/api/tunnels | sed 's/.*tcp:\/\/\(.*.io:[0-9]\+\).*/\1/'| sed 's/:/ -p /' )
-   [ -n "$hostandport" ] && break
+   [ -n "$hostandport" ] && [[ ! $hostandport =~ '{' ]]  && break
    sleep 2
 done
 [ -z "$hostandport" ] && echo "could not get ngrok port address!" && exit 1
