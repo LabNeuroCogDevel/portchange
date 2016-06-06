@@ -1,1 +1,1 @@
-ssh -AY lncd@0.tcp.ngrok.io -p 13252 #2016-05-31 08:34
+ssh -AY lncd@{"tunnels" -p [{"name":"command_line","uri":"/api/tunnels/command_line","public_url":"tcp://0.tcp.ngrok.io:14964","proto":"tcp","config":{"addr":"localhost:22","inspect":false},"metrics":{"conns":{"count":0,"gauge":0,"rate1":0,"rate5":0,"rate15":0,"p50":0,"p90":0,"p95":0,"p99":0},"http":{"count":0,"rate1":0,"rate5":0,"rate15":0,"p50":0,"p90":0,"p95":0,"p99":0}}}],"uri":"/api/tunnels"} #2016-06-06 14:04

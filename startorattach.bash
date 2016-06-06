@@ -38,7 +38,8 @@ cmd="ssh -AY lncd@$hostandport #$(date +%F\ %H:%M)"
 echo "tmux attach -t ngrok # to view/kill"
 echo "$cmd # to connect"
 # if same port, will print port
-# if we have same port, we dont need to do anything, so exit withotu error
+# if we have same port, we dont need to do anything, so exit without error
+# N.B. we do this b/c we cannot just diff cmd -- the date might be different
 sameportis=$( perl -lne '$c{$&}+=1 if /\d{5,}/; END{print grep {$c{$_}>1} keys %c} ' <(echo $cmd) cmd )
 [ -n "$sameportis" ] && exit
 
