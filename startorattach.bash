@@ -3,6 +3,9 @@ export TERM=xterm-256color
 # add tmux path
 PATH="$PATH:/opt/local/bin/"
 
+while ! ping -c 1 wallace.wpic.upmc.edu ; do  sleep 5; done
+
+
 #set -x
 
 cd $(dirname $0)
