@@ -1,1 +1,1 @@
-ssh -AY lncd@0.tcp.ngrok.io -p 16657 #2016-06-21 15:06
+ssh -AY lncd@0.tcp.ngrok.io -p 10737 #2016-08-08 09:27
