@@ -1,1 +1,1 @@
-ssh -AY lncd@{"tunnels" -p [],"uri":"/api/tunnels"} #2016-08-24 18:17
+ssh -AY lncd@{"tunnels" -p [],"uri":"/api/tunnels"} #2016-08-25 14:42
